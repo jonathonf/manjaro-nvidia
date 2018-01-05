@@ -1,0 +1,12 @@
+diff -Npur NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-uvm/uvm8_tools.c NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-uvm/uvm8_tools.c
+--- NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-uvm/uvm8_tools.c	2016-09-02 03:30:48.000000000 +0200
++++ NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-uvm/uvm8_tools.c	2016-10-23 12:25:53.846724236 +0200
+@@ -224,7 +224,7 @@ static NV_STATUS map_user_pages(NvU64 us
+     }
+ 
+     down_read(&current->mm->mmap_sem);
+-    ret = NV_GET_USER_PAGES(user_va, num_pages, 1, 0, *pages, vmas);
++    ret = NV_GET_USER_PAGES(user_va, num_pages, 1 ? FOLL_WRITE : 0, *pages, vmas);
+     up_read(&current->mm->mmap_sem);
+     if (ret != num_pages) {
+         status = NV_ERR_INVALID_ARGUMENT;

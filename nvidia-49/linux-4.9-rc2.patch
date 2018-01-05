@@ -1,0 +1,50 @@
+diff -Npur NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/common/inc/nv-mm.h NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/common/inc/nv-mm.h
+--- NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/common/inc/nv-mm.h	2016-09-02 03:32:09.000000000 +0200
++++ NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/common/inc/nv-mm.h	2016-10-23 12:21:08.043882108 +0200
+@@ -45,8 +45,8 @@
+     #define NV_GET_USER_PAGES           get_user_pages
+     #define NV_GET_USER_PAGES_REMOTE    get_user_pages_remote
+ #else
+-    #define NV_GET_USER_PAGES(start, nr_pages, write, force, pages, vmas) \
+-        get_user_pages(current, current->mm, start, nr_pages, write, force, pages, vmas)
++    #define NV_GET_USER_PAGES(start, nr_pages, gup_flags, pages, vmas) \
++        get_user_pages(current, current->mm, start, nr_pages, gup_flags, pages, vmas)
+ 
+     #define NV_GET_USER_PAGES_REMOTE    get_user_pages
+ #endif
+diff -Npur NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia/os-mlock.c NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia/os-mlock.c
+--- NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia/os-mlock.c	2016-09-02 03:32:09.000000000 +0200
++++ NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia/os-mlock.c	2016-10-23 12:22:19.786405152 +0200
+@@ -117,7 +117,7 @@ NV_STATUS NV_API_CALL os_lock_user_pages
+ 
+     down_read(&mm->mmap_sem);
+     ret = NV_GET_USER_PAGES((unsigned long)address,
+-                            page_count, write, force, user_pages, NULL);
++                            page_count, write ? FOLL_WRITE : 0, user_pages, NULL);
+     up_read(&mm->mmap_sem);
+     pinned = ret;
+ 
+diff -Npur NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-drm/nvidia-drm-linux.c NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-drm/nvidia-drm-linux.c
+--- NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-drm/nvidia-drm-linux.c	2016-09-02 03:33:06.000000000 +0200
++++ NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-drm/nvidia-drm-linux.c	2016-10-23 12:24:02.691169519 +0200
+@@ -137,7 +137,7 @@ int nvidia_drm_lock_user_pages(unsigned
+ 
+     down_read(&mm->mmap_sem);
+ 
+-    pages_pinned = NV_GET_USER_PAGES(address, pages_count, write, force,
++    pages_pinned = NV_GET_USER_PAGES(address, pages_count, write ? FOLL_WRITE :0,
+                                      user_pages, NULL);
+     up_read(&mm->mmap_sem);
+ 
+diff -Npur NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-drm/nvidia-drm-mmap.c NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-drm/nvidia-drm-mmap.c
+--- NVIDIA-Linux-x86_64-370.28-no-compat32.orig/kernel/nvidia-drm/nvidia-drm-mmap.c	2016-09-02 03:33:06.000000000 +0200
++++ NVIDIA-Linux-x86_64-370.28-no-compat32/kernel/nvidia-drm/nvidia-drm-mmap.c	2016-10-23 12:25:51.508889136 +0200
+@@ -113,7 +113,7 @@ int nvidia_drm_gem_mmap(struct file *fil
+ 
+     /* Check the caller has been granted access to the buffer object */
+ 
+-    if (!drm_vma_node_is_allowed(&gem->vma_node, filp))
++    if (!drm_vma_node_is_allowed(&gem->vma_node, (struct drm_file*)filp))
+     {
+         ret = -EACCES;
+ 
