@@ -14,7 +14,8 @@ cd ../nvidia-414
 makepkg -Csric
 ```
 
-As for building any package you'll need `base-devel` installed too.
+In common with building any package you'll need `base-devel` installed first.
+You could also use a clean chroot or other build container.
 
 If you need `multlib` support, build `lib32-nvidia-utils` too. If you don't, don't. :)
 
