@@ -3,23 +3,24 @@
 
 pkgbase=nvidia-utils
 pkgname=('nvidia-utils' 'opencl-nvidia' 'mhwd-nvidia')
-pkgver=387.34
+pkgver=390.25
 pkgrel=0
 epoch=1
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
 options=('!strip')
-source=('mhwd-nvidia' 'nvidia-drm-outputclass.conf')
+source=('mhwd-nvidia' 'nvidia-drm-outputclass.conf' 'nvidia-utils.sysusers')
 durl="http://us.download.nvidia.com/XFree86/Linux-x86"
 #durl="http://developer.download.nvidia.com/assets/opengl/369.00"
 source_i686=("${durl}/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 #source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}.run")
 source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
 sha256sums=('11176f1c070bbdbfaa01a3743ec065fe71ff867b9f72f1dce0de0339b5873bb5'
-            '37e2e35fcfc536a47212d57420ee3d8502b541a18027367104052aca63e63266')
-sha256sums_i686=('b8babd2c7128233d83cc3bae0ee04c80580e9098849864e7b9bc3217609958c1')
-sha256sums_x86_64=('d540908e76aeecb1f4a2812acf5ad37346934a6b7c8043c8b3ce230a48ceb440')
+            '089d6dc247c9091b320c418b0d91ae6adda65e170934d178cdd4e9bd0785b182'
+            'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167')
+sha256sums_i686=('1183552b46409a3c09caa172da5a296b56078d178c5ad272bed7101a40bf6b3a')
+sha256sums_x86_64=('02263bc81b66e68fc8224447b249f4f0ca4ae201c467e236d917be2fe187f3d6')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 #[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}"
@@ -27,7 +28,7 @@ sha256sums_x86_64=('d540908e76aeecb1f4a2812acf5ad37346934a6b7c8043c8b3ce230a48ce
 
 create_links() {
     # create soname links
-    for _lib in $(find "${pkgdir}" -name '*.so*' | grep -v 'xorg/'); do
+    find "$pkgdir" -type f -name '*.so*' ! -path '*xorg/*' -print0 | while read -d $'\0' _lib; do
         _soname=$(dirname "${_lib}")/$(readelf -d "${_lib}" | grep -Po 'SONAME.*: \[\K[^]]*' || true)
         _base=$(echo ${_soname} | sed -r 's/(.*).so.*/\1.so/')
         [[ -e "${_soname}" ]] || ln -s $(basename "${_lib}") "${_soname}"
@@ -74,6 +75,8 @@ package_mhwd-nvidia() {
     ${srcdir}/${_pkg}/README.txt \
     ${srcdir}/${_pkg}/kernel/nvidia/nv-kernel.o_binary \
     > ${pkgdir}/var/lib/mhwd/ids/pci/nvidia.ids
+    # add PCIID: 1b82 Nvidia Gforce 1070 Ti
+    sed -i 's/1b81 1b84/1b81 1b82 1b84/g' ${pkgdir}/var/lib/mhwd/ids/pci/nvidia.ids
 }
 
 
@@ -102,7 +105,7 @@ package_nvidia-utils() {
 
     # Wayland
     install -D -m755 "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib/libnvidia-egl-wayland.so.1.0.2"
-    ln -s "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib/libnvidia-egl-wayland.so.2"
+    ln -s "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib/libnvidia-egl-wayland.so.1"
     install -D -m644 "10_nvidia_wayland.json" "${pkgdir}/usr/share/egl/egl_external_platform.d/10_nvidia_wayland.json"
 
     # OpenGL library
@@ -198,6 +201,8 @@ package_nvidia-utils() {
     # distro specific files must be installed in /usr/share/X11/xorg.conf.d
     install -m755 -d "${pkgdir}/usr/share/X11/xorg.conf.d"
     install -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
+
+    install -Dm644 "${srcdir}/nvidia-utils.sysusers" "${pkgdir}/usr/lib/sysusers.d/$pkgname.conf"
 
     create_links
 }
