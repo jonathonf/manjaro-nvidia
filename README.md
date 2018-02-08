@@ -1,5 +1,5 @@
 # manjaro-nvidia
-PKGBUILD files for packaging the latest Nvidia drivers for Manjaro
+PKGBUILD files for packaging the latest NVIDIA drivers for Manjaro.
 
 # How to install
 Clone the repo, build and install `nvidia-utils`, then build the extramodule for
@@ -17,7 +17,9 @@ makepkg -Csric
 In common with building any package you'll need `base-devel` installed first.
 You could also use a clean chroot or other build container.
 
-If you need `multlib` support, build `lib32-nvidia-utils` too. If you don't, don't. :)
+If you need `multilib` support, build `lib32-nvidia-utils` too. If you don't, don't. :)
+
+You may also want to build `nvidia-settings` to match the current driver version.
 
 # How to maintain
 You must rebuild the extramodule each time the kernel is updated.
