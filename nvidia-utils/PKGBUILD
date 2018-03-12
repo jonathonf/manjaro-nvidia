@@ -109,8 +109,8 @@ package_nvidia-utils() {
     install -D -m644 "10_nvidia_wayland.json" "${pkgdir}/usr/share/egl/egl_external_platform.d/10_nvidia_wayland.json"
 
     # OpenGL library
-    install -D -m755 "libGL.so.1.0.0" "${pkgdir}/usr/lib/nvidia/libGL.so.1.0.0"
-    install -D -m755 "libEGL.so.1" "${pkgdir}/usr/lib/nvidia/libEGL.so.1.0.0"
+    install -D -m755 "libGL.so.1.7.0" "${pkgdir}/usr/lib/nvidia/libGL.so.1.7.0"
+    install -D -m755 "libEGL.so.1.1.0" "${pkgdir}/usr/lib/nvidia/libEGL.so.1.1.0"
     install -D -m755 "libEGL_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/libEGL_nvidia.so.${pkgver}"
     install -D -m755 "libGLESv1_CM_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/libGLESv1_CM_nvidia.so.${pkgver}"
     install -D -m755 "libGLESv2_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/libGLESv2_nvidia.so.${pkgver}"

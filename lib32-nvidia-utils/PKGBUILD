@@ -74,8 +74,8 @@ package_lib32-nvidia-utils() {
     ln -s "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib32/libnvidia-egl-wayland.so.1"
 
     # OpenGL libraries
-    install -D -m755 "libGL.so.1.0.0" "${pkgdir}/usr/lib32/nvidia/libGL.so.1.0.0"
-    install -D -m755 "libEGL.so.1" "${pkgdir}/usr/lib32/nvidia/libEGL.so.1.0.0"
+    install -D -m755 "libGL.so.1.7.0" "${pkgdir}/usr/lib32/nvidia/libGL.so.1.7.0"
+    install -D -m755 "libEGL.so.1.1.0" "${pkgdir}/usr/lib32/nvidia/libEGL.so.1.1.0"
     install -D -m755 "libEGL_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/libEGL_nvidia.so.${pkgver}"
     install -D -m755 "libGLESv1_CM_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/libGLESv1_CM_nvidia.so.${pkgver}"
     install -D -m755 "libGLESv2_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/libGLESv2_nvidia.so.${pkgver}"
