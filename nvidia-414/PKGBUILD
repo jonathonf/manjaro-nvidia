@@ -7,7 +7,7 @@ _linuxprefix=linux414
 _extramodules=extramodules-4.14-MANJARO
 pkgname=$_linuxprefix-nvidia
 _pkgname=nvidia
-pkgver=390.25
+pkgver=390.42
 pkgrel=0
 epoch=1
 provides=("$_pkgname=$pkgver")
@@ -24,8 +24,8 @@ options=(!strip)
 durl="http://us.download.nvidia.com/XFree86/Linux-x86"
 source_i686=("${durl}/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums_i686=('1183552b46409a3c09caa172da5a296b56078d178c5ad272bed7101a40bf6b3a')
-sha256sums_x86_64=('02263bc81b66e68fc8224447b249f4f0ca4ae201c467e236d917be2fe187f3d6')
+sha256sums_i686=('a132a5d999ca70b6047d6babd382e27394876afc3bce7e7418c3aa3ada78dc44')
+sha256sums_x86_64=('5f242cf0f7f4dcc45759eee3b4973191114842fe7c146c5ae7a12a2ebea394aa')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
