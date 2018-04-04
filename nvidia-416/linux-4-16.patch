@@ -1,0 +1,22 @@
+diff --git a/NVIDIA-Linux-x86_64-390.25-no-compat32/kernel/common/inc/nv-linux.h b/NVIDIA-Linux-x86_64-390.25-no-compat32/kernel/common/inc/nv-linux.h
+index 9e52f7e..91ea6bb 100644
+--- a/NVIDIA-Linux-x86_64-390.25-no-compat32/kernel/common/inc/nv-linux.h
++++ b/NVIDIA-Linux-x86_64-390.25-no-compat32/kernel/common/inc/nv-linux.h
+@@ -1209,7 +1209,7 @@ static inline NvU32 nv_alloc_init_flags(int cached, int contiguous, int zeroed)
+ static inline NvBool nv_dma_maps_swiotlb(struct pci_dev *dev)
+ {
+     NvBool swiotlb_in_use = NV_FALSE;
+-#if defined(CONFIG_SWIOTLB)
++#if defined(CONFIG_SWIOTLB) && LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+   #if defined(NV_DMA_OPS_PRESENT) || defined(NV_GET_DMA_OPS_PRESENT)
+     /*
+      * We only use the 'dma_ops' symbol on older x86_64 kernels; later kernels,
+@@ -1249,6 +1249,8 @@ static inline NvBool nv_dma_maps_swiotlb(struct pci_dev *dev)
+      * longer exported.
+      */
+     swiotlb_in_use = (swiotlb == 1);
++#else
++    swiotlb_in_use = NV_TRUE;
+   #endif
+ #endif
+ 
