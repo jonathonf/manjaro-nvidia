@@ -5,20 +5,18 @@
 _pkgbasename=nvidia-utils
 pkgbase=lib32-$_pkgbasename
 pkgname=('lib32-nvidia-utils' 'lib32-opencl-nvidia')
-pkgver=390.48
+pkgver=396.18
 pkgrel=0
 epoch=1
 arch=('x86_64')
-url="http://www.nvidia.com/"
+url="https://www.nvidia.com/"
 license=('custom')
 options=('!strip')
 
-_arch='x86'
-_pkg="NVIDIA-Linux-${_arch}-${pkgver}"
-durl="http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}"
-#durl="http://developer.download.nvidia.com/assets/opengl/369.00"
-source=("${durl}/NVIDIA-Linux-x86-${pkgver}.run")
-sha256sums=('5115894ebb9d5d4c75c11e73a79093b7687328ebcf85d1de81a0edf41d14d6f8')
+_pkg="NVIDIA-Linux-x86_64-${pkgver}"
+durl="https://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}"
+source=("${durl}/NVIDIA-Linux-x86_64-${pkgver}.run")
+sha256sums=('63223406a552fd50808dca0b6864dccbc265dfc614dde89492f1e53afa7cce0b')
 
 create_links() {
     # create soname links
@@ -39,7 +37,7 @@ package_lib32-opencl-nvidia() {
     depends=('lib32-zlib' 'lib32-gcc-libs')
     optdepends=('opencl-headers: headers necessary for OpenCL development')
     provides=('lib32-opencl-driver' "lib32-opencl-nvidia=$pkgver")
-    cd "${_pkg}"
+    cd "${_pkg}"/32
 
     # OpenCL
     install -D -m755 "libnvidia-compiler.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-compiler.so.${pkgver}"
@@ -61,17 +59,17 @@ package_lib32-nvidia-utils() {
     replaces=('lib32-nvidia-libgl')
     install="${pkgname}.install"
 
-    cd "${_pkg}"
+    cd "${_pkg}"/32
 
     # GLX extension module for X
-    install -D -m755 "libglx.so.${pkgver}" "${pkgdir}/usr/lib32/nvidia/xorg/modules/extensions/libglx.so.${pkgver}"
-    ln -s "libglx.so.${pkgver}" "${pkgdir}/usr/lib32/nvidia/xorg/modules/extensions/libglx.so"	# X doesn't find glx otherwise
+    install -D -m755 "libGLX.so.0" "${pkgdir}/usr/lib32/nvidia/xorg/modules/extensions/libGLX.so.0"
+    ln -s "libGLX.so.0" "${pkgdir}/usr/lib32/nvidia/xorg/modules/extensions/libGLX.so" # X doesn't find glx otherwise
     install -D -m755 "libGLX_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/libGLX_nvidia.so.${pkgver}"
     #ln -s "libGLX_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/libGLX_indirect.so.0"
 
     # Wayland
-    install -D -m755 "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib32/libnvidia-egl-wayland.so.1.0.2"
-    ln -s "libnvidia-egl-wayland.so.1.0.2" "${pkgdir}/usr/lib32/libnvidia-egl-wayland.so.1"
+    #install -D -m755 "libnvidia-egl-wayland.so.1.0.3" "${pkgdir}/usr/lib32/libnvidia-egl-wayland.so.1.0.3"
+    #ln -s "libnvidia-egl-wayland.so.1.0.3" "${pkgdir}/usr/lib32/libnvidia-egl-wayland.so.1"
 
     # OpenGL libraries
     install -D -m755 "libGL.so.1.7.0" "${pkgdir}/usr/lib32/nvidia/libGL.so.1.7.0"
@@ -89,9 +87,9 @@ package_lib32-nvidia-utils() {
     install -D -m755 "libnvidia-ifr.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-ifr.so.${pkgver}"
     install -D -m755 "libnvidia-fbc.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-fbc.so.${pkgver}"
     install -D -m755 "libnvidia-encode.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-encode.so.${pkgver}"
-    install -D -m755 "libnvidia-cfg.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-cfg.so.${pkgver}"
+    #install -D -m755 "libnvidia-cfg.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-cfg.so.${pkgver}"
     install -D -m755 "libnvidia-ml.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-ml.so.${pkgver}"
-    install -D -m755 "libnvidia-wfb.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-wfb.so.${pkgver}"
+    #install -D -m755 "libnvidia-wfb.so.${pkgver}" "${pkgdir}/usr/lib32/libnvidia-wfb.so.${pkgver}"
 
     # VDPAU
     install -D -m755 "libvdpau_nvidia.so.${pkgver}" "${pkgdir}/usr/lib32/vdpau/libvdpau_nvidia.so.${pkgver}"

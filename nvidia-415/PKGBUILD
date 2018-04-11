@@ -7,28 +7,26 @@ _linuxprefix=linux415
 _extramodules=extramodules-4.15-MANJARO
 pkgname=$_linuxprefix-nvidia
 _pkgname=nvidia
-pkgver=390.48
+pkgver=396.18
 pkgrel=0
 epoch=1
 provides=("$_pkgname=$pkgver")
 groups=("$_linuxprefix-extramodules")
 pkgdesc="NVIDIA drivers for linux."
-arch=('i686' 'x86_64')
-url="http://www.nvidia.com/"
+arch=('x86_64')
+url="https://www.nvidia.com/"
 depends=("$_linuxprefix" "nvidia-utils=${epoch}:${pkgver}")
 makedepends=("$_linuxprefix-headers")
 conflicts=('nvidia-96xx' 'nvidia-173xx')
 license=('custom')
 install=nvidia.install
 options=(!strip)
-durl="https://us.download.nvidia.com/XFree86/Linux-x86"
-source_i686=("${durl}/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
-source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums_i686=('5115894ebb9d5d4c75c11e73a79093b7687328ebcf85d1de81a0edf41d14d6f8')
-sha256sums_x86_64=('2d4bf72801f101a85df6fd1464021380ad51f5a30df05dadaf1fb546a175a441')
+durl="https://us.download.nvidia.com/XFree86/Linux-x86_64"
+source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}.run")
+sha256sums_x86_64=('63223406a552fd50808dca0b6864dccbc265dfc614dde89492f1e53afa7cce0b')
 
-[[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
-[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
+[[ "$CARCH" = "i686" ]] && exit 1
+[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 
 prepare() {
     sh "${_pkg}.run" --extract-only
