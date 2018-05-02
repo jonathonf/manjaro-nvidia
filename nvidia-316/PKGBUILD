@@ -7,7 +7,7 @@ _linuxprefix=linux316
 _extramodules=extramodules-3.16-MANJARO
 pkgname=$_linuxprefix-nvidia
 _pkgname=nvidia
-pkgver=396.18
+pkgver=396.24
 pkgrel=0
 epoch=1
 provides=("$_pkgname=$pkgver")
@@ -23,7 +23,7 @@ install=nvidia.install
 options=(!strip)
 durl="https://us.download.nvidia.com/XFree86/Linux-x86_64"
 source_x86_64=("${durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}.run")
-sha256sums_x86_64=('63223406a552fd50808dca0b6864dccbc265dfc614dde89492f1e53afa7cce0b')
+sha256sums_x86_64=('59bb112b17ca72cd15fed4e521d4b52b0e9f5b8b13a95b36521f8eda978b568e')
 
 [[ "$CARCH" = "i686" ]] && exit 1
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}"
